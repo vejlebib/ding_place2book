@@ -103,6 +103,12 @@ function ding_place2book_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       break;
 
       case update:
+        // Continue only if node contains place2book data - they will not be there 
+        // when performing a bulk update, updating via scheduler module etc.
+        if (empty($node->place2book)) {
+          break;
+        }
+        
         // Get existing Place2book settings for this node.
         $settings = place2book_settings($node->nid);
         $place2book_id = isset($settings['place2book_id']) ? $settings['place2book_id'] : NULL;
