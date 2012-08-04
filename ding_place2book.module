@@ -45,50 +45,18 @@ function ding_place2book_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     switch ($op) {
       case 'view':
         if (isset($node->nid) && $node->nid) {
-          $place2book_id = db_result(db_query('SELECT place2book_id
-                                                 FROM {ding_place2book}
-                                                WHERE nid = %d', $node->nid));
-          if ($place2book_id) {
-            $service_settings = variable_get(ding_place2book, array());
-            $api_key = place2book_get_api_key($node->field_library_ref[0]['nid']);
-            if ($api_key == NULL) {
-              return;
-            }
+          $infolink = render_place2book_ticketsinfo($node);
 
-            $headers = array(
-              'X-PLACE2BOOK-API-TOKEN' => $api_key,
-              'X-PLACE2BOOK-EVENT-ID' => $place2book_id,
+          /**
+           * REVIEW: Maybe this should be made into a block og panel pane, so
+           *         libraries have more freedom to place it one the page. This
+           *         may also require changes in sub-themes.
+           */
+          $node->content['place2book_infolink'] = array(
+            '#value' => $infolink,
+            '#weight' => 10,
             );
-            $p2b_result = drupal_http_request($service_settings['service_url'] . '/available_tickets', $headers, 'GET' );
-						
-            /**
-             * REVIEW: Maybe move this to a theme function.
-             */
-            if ($p2b_result->headers['Sales-Status']) {
-							// To determine if there are available tickets, we need to check for a positive number OR part of the string 'Ubegrænset antal'
-            	if ($p2b_result->headers['Sales-Status'] == 'open' && ($p2b_result->headers['Available-Tickets'] > 0 || strpos($p2b_result->headers['Available-Tickets'], 'antal') > 0)) {
-                $link = l(t('Book a ticket'), $p2b_result->headers['Location']);
-                $infolink = '<div class="place2book order">' . $link . '</div>';
-              }
-              elseif ($p2b_result->headers['Available-Tickets'] == 0) {
-                $infolink = '<div class="place2book info">' . t('There are no available tickets for this event') . '</div>';
-              }
-              elseif ($p2b_result->headers['Sales-Status'] == 'closed') {
-                $infolink = '<div class="place2book info">' . t('The event is closed') . '</div>';
-              }
-            }
-
-            /**
-             * REVIEW: Maybe this should be made into a block og panel pane, so
-             *         libraries have more freedom to place it one the page. This
-             *         may also require changes in sub-themes.
-             */
-            $node->content['place2book_infolink'] = array(
-              '#value' => $infolink,
-              '#weight' => 10,
-              );
-            }
-          }
+        }
         break;
 
       case insert:
@@ -623,4 +591,121 @@ function place2book_get_api_key($library_id = NULL) {
     }
   }
   return $api_key;
+}
+
+/*
+ * Rendering function for place2book tickets info
+ */
+function render_place2book_ticketsinfo($node) {
+  $type = '';  
+  $url = '';
+  $place2book_id = 0;
+  $maintain_copy = 0;
+  $passive = 0;
+  
+  //get data from ding_place2book table 
+  $place2book_result = db_query('SELECT place2book_id, maintain_copy, passive FROM {ding_place2book} WHERE nid = %d', $node->nid);
+  while ($place2book = db_fetch_array($place2book_result)) { 
+    $place2book_id = $place2book['place2book_id'];
+    $maintain_copy = $place2book['maintain_copy'];
+    $passive = $place2book['passive'];
+  }
+  
+  //the function is to return nothing if we should not be rendering anything
+  if ($place2book_id == 0 OR $maintain_copy == 0 OR ($maintain_copy == 1 && $passive == 1)) {
+    return;
+  }
+  
+  //variables for a date comparison
+  $event_timestamp = strtotime($node->field_datetime[0]['value']);
+  $today_timestamp = strtotime(date("Y-m-d")); 
+  
+  if ($today_timestamp > $event_timestamp) {
+    $type = 'event-over';
+  } 
+  else {
+    if ($place2book_id) {
+      $service_settings = variable_get('ding_place2book', array());
+  
+      //get the library id for the event
+      $api_key = place2book_get_api_key($node->field_library_ref[0]['nid']);
+      if ($api_key == NULL) {
+        return;
+      }
+  
+      $headers = array(
+              'X-PLACE2BOOK-API-TOKEN' => $api_key,
+              'X-PLACE2BOOK-EVENT-ID' => $place2book_id,
+            );
+      $p2b_result = drupal_http_request($service_settings['service_url'] . '/available_tickets', $headers, 'GET' );
+      
+      //we must have a sales-status header
+      if ($p2b_result->headers['Sales-Status']) {
+        
+        //check if the event is closed for admissions
+        if ($p2b_result->headers['Sales-Status'] == 'closed') {
+          $type = 'closed-admission';
+        } 
+        else {
+          
+          //check if we have no tickets left
+          //number from Available-Tickets header is a string and must be tested as such
+          if ($p2b_result->headers['Available-Tickets'] == "0") {
+            $type = 'no-tickets-left';
+          } 
+          else {
+            
+            //check to see if we should present an link for ordering a ticket
+            //number from Available-Tickets header is a string and must be typecast as integer
+            if ($p2b_result->headers['Sales-Status'] == 'open' && ((int)$p2b_result->headers['Available-Tickets'] > 0 || strpos($p2b_result->headers['Available-Tickets'], 'antal') > 0)) {
+              $type = 'order-link';
+              $url = $p2b_result->headers['Location'];
+            } 
+          }
+        }
+      }
+    }
+  }
+  
+  return theme('place2book_ticketsinfo', $place2book_id, $url, $type);
+}
+
+/*
+ * ticketsinfo theme function
+ */
+function theme_place2book_ticketsinfo($place2book_id, $url, $type) {
+  $output = '';
+  
+  switch ($type) {
+    case 'event-over':
+      $output = '<div class="place2book info">' . t('The event has already taken place') . '</div>';
+      break;
+    case 'closed-admission':
+      $output = '<div class="place2book info">' . t('The event is closed for admission') . '</div>';
+      break;
+    case 'no-tickets-left':
+      $output = '<div class="place2book info">' . t('There are no available tickets for this event') . '</div>';
+      break;
+    case 'order-link':
+      $output = '<div class="place2book order">' . l(t('Book a ticket'), $url) . '</div>';
+      break;
+    default:
+      $output = '';
+      break;
+  }
+  
+  return $output;
+}
+
+/*
+ * Implements hook_theme().
+ */
+function ding_place2book_theme() {
+  $items = array(
+    'place2book_ticketsinfo' => array(
+      'arguments' => array($place2book_id = NULL, $url = NULL, $type = NULL),
+    ),
+  );
+
+  return $items;
 }
