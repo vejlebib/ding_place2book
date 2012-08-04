@@ -28,7 +28,6 @@ msgstr "Du har endnu ikke indstillet Place2book modulet"
 #: ding_place2book.module:158
 msgid "Entry price is submitted to Place2book as the ticket type with name ADGANG. If more ticket types on this event is needed, go to Place2book ID !link. (Note: You may need to log on)"
 msgstr ""
-msgstr ""
 "Entrépris sendes til Place2book som billettypen ADGANG. Hvis der "
 "ønskes flere billettyper, kan disse oprettes på Place2book "
 "arrangementet med ID !link. (NB: Det kan være nødvendigt at logge "
