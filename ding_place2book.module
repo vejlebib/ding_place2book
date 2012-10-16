@@ -618,9 +618,8 @@ function render_place2book_ticketsinfo($node) {
   
   //variables for a date comparison
   $event_timestamp = strtotime($node->field_datetime[0]['value']);
-  $today_timestamp = strtotime(date("Y-m-d")); 
   
-  if ($today_timestamp > $event_timestamp) {
+  if (time() > $event_timestamp) {
     $type = 'event-over';
   } 
   else {
