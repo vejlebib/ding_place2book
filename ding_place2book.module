@@ -177,7 +177,7 @@ function ding_place2book_form_alter(&$form, $form_state, $form_id) {
     $node_settings = place2book_settings($nid);
     
     // Service settings.
-    $service_settings = variable_get(ding_place2book, array());
+    $service_settings = variable_get('ding_place2book', array());
     if (empty($service_settings)) {
       drupal_set_message(t('You have not yet configured the Place2Book module'), 'WARNING', FALSE);
       return;
