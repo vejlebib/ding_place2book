@@ -1,9 +1,30 @@
 <?php
 
 /**
+* Called via AJAX/JavaScript.
+* Returns (prints) JSON containing ticket information from Place2book
+*
+* @param int $nid
+* @return null
+*/
+function ding_place2book_get_ticketinfo($nid) {
+  //get the node
+  $eventnode = node_load($nid);
+
+  $result = array();
+  $result['nid'] = $nid;
+  $result['markup'] = render_place2book_ticketsinfo($eventnode);
+  
+  drupal_set_header('Content-Type: application/json; charset=utf-8');
+  echo json_encode($result);
+  return;
+}
+
+/**
  * Implementation of hook_init().
  */
 function ding_place2book_init() {
+  drupal_add_js(drupal_get_path('module', 'ding_place2book') . '/js/ding_place2book.js');
   drupal_add_css(drupal_get_path('module', 'ding_place2book') .'/css/ding_place2book.css');
 }
 
@@ -31,6 +52,15 @@ function ding_place2book_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'includes/ding_place2book.admin.inc',
   );
+  
+  $items['ding/place2book/ticketinfo/%'] = array(
+    'title' => 'Ding Place2book ticket info',
+    'description' => 'Returns ticket info or order button from Place2book',
+    'page callback' => 'ding_place2book_get_ticketinfo',
+    'page arguments' => array(3),
+    'access arguments' => array('access content'),
+  );
+  
   return $items;
 }
 
@@ -45,7 +75,7 @@ function ding_place2book_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     switch ($op) {
       case 'view':
         if (isset($node->nid) && $node->nid) {
-          $infolink = render_place2book_ticketsinfo($node);
+          $infolink = '<input type="hidden" class="place2book-ticketinfo" value="' . $node->nid . '"/>';
 
           /**
            * REVIEW: Maybe this should be made into a block og panel pane, so
