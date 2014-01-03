@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-01-03 21:58+0100\n"
-"PO-Revision-Date: 2014-01-03 21:58+0100\n"
+"POT-Creation-Date: 2014-01-03 22:14+0100\n"
+"PO-Revision-Date: 2014-01-03 22:14+0100\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Danish <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -127,23 +127,23 @@ msgstr ""
 msgid "The related event on Place2book was deleted."
 msgstr "Det tilsvarende event hos Place2book blev slettet."
 
-#: ding_place2book.module:719
+#: ding_place2book.module:720
 msgid "The event has already taken place"
 msgstr "Arrangementet har allerede fundet sted"
 
-#: ding_place2book.module:722
+#: ding_place2book.module:723
 msgid "The event is closed for admission"
 msgstr "Arrangementet er lukket for tilmeldinger"
 
-#: ding_place2book.module:725
+#: ding_place2book.module:726
 msgid "Ticket sale has not yet started for this event"
 msgstr "Endnu ikke åbent for billetsalg"
 
-#: ding_place2book.module:728
+#: ding_place2book.module:729
 msgid "There are no available tickets for this event"
 msgstr "Der er ikke flere billetter til dette arrangement"
 
-#: ding_place2book.module:731
+#: ding_place2book.module:732
 msgid "Book a ticket"
 msgstr "Bestil billet(ter)"
 
@@ -193,7 +193,9 @@ msgstr "En ID-reference til det tilsvarende arrangement på billettjenesten"
 
 #: ding_place2book.install:30
 msgid "The maximum capacity on the Place2Book event. 0 is interpreted as unlimited capacity on the event (default)"
-msgstr "Maksimum kapacitet på Place2book arrangementet. 0 tolkes som ubegrænset kapacitet på arrangementet (standard)"
+msgstr ""
+"Maksimum kapacitet på Place2book arrangementet. 0 tolkes som "
+"ubegrænset kapacitet på arrangementet (standard)"
 
 #: ding_place2book.install:37
 msgid "Event is created and updated on Place2Book"
@@ -235,7 +237,9 @@ msgstr "Place2Book service URL"
 
 #: includes/ding_place2book.admin.inc:33
 msgid "Enter a valid Place2book service endpoint, such as https://www.place2book.com/da/event_api"
-msgstr "Indsæt et gyldigt Place2book service endpoint, såsom https://www.place2book.com/da/event_api"
+msgstr ""
+"Indsæt et gyldigt Place2book service endpoint, såsom "
+"https://www.place2book.com/da/event_api"
 
 #: includes/ding_place2book.admin.inc:40
 msgid "Place2Book events URL"
@@ -243,7 +247,10 @@ msgstr "Place2Book arrangements URL"
 
 #: includes/ding_place2book.admin.inc:42
 msgid "Link to events on Place2Book, such as https://www.place2book.com/da/events. It will be used to generate links to the event at Place2Book"
-msgstr "Link til arrangementer på Place2book, såsom https://www.place2book.com/da/events. Den vil blive brugt ved generering af links til arrangementet på Place2book"
+msgstr ""
+"Link til arrangementer på Place2book, såsom "
+"https://www.place2book.com/da/events. Den vil blive brugt ved "
+"generering af links til arrangementet på Place2book"
 
 #: includes/ding_place2book.admin.inc:49
 msgid "Place2Book default API key"
@@ -251,7 +258,11 @@ msgstr "Place2Book standard API nøgle"
 
 #: includes/ding_place2book.admin.inc:52
 msgid "This is the default API key used when connecting to Place2book. If you provide API key for a specific library (below), events related to that library will use that key instead of the default key."
-msgstr "Dette er standard API nøglen brugt når der forbindes til Place2book. Hvis du angiver API nøgler for et specifikt bibliotek (nedenfor), vil arrangementer relateret til dette bibliotek bruge denne nøgle istedet for standard nøglen"
+msgstr ""
+"Dette er standard API nøglen brugt når der forbindes til Place2book. "
+"Hvis du angiver API nøgler for et specifikt bibliotek (nedenfor), vil "
+"arrangementer relateret til dette bibliotek bruge denne nøgle istedet "
+"for standard nøglen"
 
 #: includes/ding_place2book.admin.inc:57
 msgid "Place2Book provider name"
@@ -298,3 +309,4 @@ msgstr ""
 #: includes/ding_place2book.admin.inc:117
 msgid "Maintain copy"
 msgstr "Vedligehold kopi"
+
