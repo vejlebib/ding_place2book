@@ -14,7 +14,7 @@ function ding_place2book_get_ticketinfo($nid) {
   $result = array();
   $result['nid'] = $nid;
   $result['markup'] = render_place2book_ticketsinfo($eventnode);
-  
+
   drupal_set_header('Content-Type: application/json; charset=utf-8');
   echo json_encode($result);
   return;
@@ -52,7 +52,7 @@ function ding_place2book_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'includes/ding_place2book.admin.inc',
   );
-  
+
   $items['ding/place2book/ticketinfo/%'] = array(
     'title' => 'Ding Place2book ticket info',
     'description' => 'Returns ticket info or order button from Place2book',
@@ -60,7 +60,7 @@ function ding_place2book_menu() {
     'page arguments' => array(3),
     'access arguments' => array('access content'),
   );
-  
+
   return $items;
 }
 
@@ -95,18 +95,18 @@ function ding_place2book_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
           $place2book_id = place2book_event_op('insert', $node);
         }
         else {
-          // Insert - no copy at place2book, save settings only 
+          // Insert - no copy at place2book, save settings only
           _place2book_db_op('insert', $node);
         }
       break;
 
       case update:
-        // Continue only if node contains place2book data - they will not be there 
+        // Continue only if node contains place2book data - they will not be there
         // when performing a bulk update, updating via scheduler module etc.
         if (empty($node->place2book)) {
           break;
         }
-        
+
         // Get existing Place2book settings for this node.
         $settings = place2book_settings($node->nid);
         $place2book_id = isset($settings['place2book_id']) ? $settings['place2book_id'] : NULL;
@@ -120,7 +120,7 @@ function ding_place2book_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
             // Update - maintain_copy and valided id
             place2book_event_op('update', $node, $place2book_id);
           }
-          // maintain_copy differs from previous state  
+          // maintain_copy differs from previous state
           else {
             // Insert - maintain_copy and no id (or id -1 re-connect to place2book).
             place2book_event_op('insert', $node, $place2book_id);
@@ -128,7 +128,7 @@ function ding_place2book_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         }
         // maintain_copy is unset on node edit page
         else {
-        	// maintain_copy differs from previous state 
+        	// maintain_copy differs from previous state
         	if ($settings['maintain_copy']) {
         		// Delete - don't maintain_copy
           	place2book_event_op('delete', $node, $place2book_id);
@@ -175,7 +175,7 @@ function ding_place2book_form_alter(&$form, $form_state, $form_id) {
     // Get the nid in a PHP 5.3 safe way and load settings for this node.
     $nid = isset($form['nid']['#value']) ? $form['nid']['#value'] : NULL;
     $node_settings = place2book_settings($nid);
-    
+
     // Service settings.
     $service_settings = variable_get('ding_place2book', array());
     if (empty($service_settings)) {
@@ -237,7 +237,7 @@ function ding_place2book_form_alter(&$form, $form_state, $form_id) {
       '#default_value' => isset($node_settings['kultunaut_export']) ? $node_settings['kultunaut_export'] : $node_settings['defaults']['kultunaut_export'],
       '#description' => t('If checked, Place2book will forward this ding-event to Kultunaut.'),
     );
-		
+
 		$form['place2book']['passive'] = array(
       '#type' => 'checkbox',
       '#title' => t('Passive event'),
@@ -478,7 +478,7 @@ function place2book_build_xml($node, $service_settings) {
 	if (isset($node->place2book['passive']) && $node->place2book['passive'] == '1') {
 	  $xml->event->addAttribute('passive', '1');
 	}
-	
+
   // -- set kultunaut terms --
   $term_list = '';
   if ($node->taxonomy) {
@@ -489,7 +489,7 @@ function place2book_build_xml($node, $service_settings) {
     }
     $term_list = rtrim($term_list, ",");
   }
-  
+
   // I have the term ids already, so the following 2 queries will in turn give
   // me term names to use on kultunaut_export_category and kultunaut_age_group
   if (!empty($term_list)) {
@@ -531,7 +531,7 @@ function place2book_build_xml($node, $service_settings) {
 function place2book_settings($nid = NULL) {
   // Get default values.
   $settings = variable_get('ding_place2book_event_nodes', array());
-  
+
   // Check database for node specific settings, if nid is defined.
   if ($nid) {
     $result = db_fetch_array(db_query('SELECT *
@@ -540,7 +540,7 @@ function place2book_settings($nid = NULL) {
     if ($result) {
       $settings = $result;
     }
-  } 
+  }
   return $settings;
 }
 
@@ -627,56 +627,60 @@ function place2book_get_api_key($library_id = NULL) {
  * Rendering function for place2book tickets info
  */
 function render_place2book_ticketsinfo($node) {
-  $type = '';  
+  $type = '';
   $url = '';
   $place2book_id = 0;
   $maintain_copy = 0;
   $passive = 0;
-  
-  //get data from ding_place2book table 
+
+  //get data from ding_place2book table
   $place2book_result = db_query('SELECT place2book_id, maintain_copy, passive FROM {ding_place2book} WHERE nid = %d', $node->nid);
-  while ($place2book = db_fetch_array($place2book_result)) { 
+  while ($place2book = db_fetch_array($place2book_result)) {
     $place2book_id = $place2book['place2book_id'];
     $maintain_copy = $place2book['maintain_copy'];
     $passive = $place2book['passive'];
   }
-  
+
   //the function is to return nothing if we should not be rendering anything
   if ($place2book_id == 0 OR $maintain_copy == 0 OR ($maintain_copy == 1 && $passive == 1)) {
     return;
   }
-  
+
   //variables for a date comparison
   $event_timestamp = strtotime($node->field_datetime[0]['value']);
-  
+
   if (time() > $event_timestamp) {
     $type = 'event-over';
-  } 
+  }
   else {
     if ($place2book_id) {
       $service_settings = variable_get('ding_place2book', array());
-  
+
       //get the library id for the event
       $api_key = place2book_get_api_key($node->field_library_ref[0]['nid']);
       if ($api_key == NULL) {
         return;
       }
-  
+
       $headers = array(
               'X-PLACE2BOOK-API-TOKEN' => $api_key,
               'X-PLACE2BOOK-EVENT-ID' => $place2book_id,
             );
       $p2b_result = drupal_http_request($service_settings['service_url'] . '/available_tickets', $headers, 'GET' );
-      
-      //we must have a sales-status header
+
+      // We must have a sales-status header
       if ($p2b_result->headers['Sales-Status']) {
-        
-        //check if the event is closed for admissions
+
+        // Check if the event is closed for admissions
         if ($p2b_result->headers['Sales-Status'] == 'closed') {
           $type = 'closed-admission';
-        } 
+        }
+        // Check if sales period is in the future and ticket sale has not started yet
+        elseif ($p2b_result->headers['Sales-Status'] == 'upcoming') {
+          $type = 'sale-not-started';
+        }
         else {
-          
+
           /*
            * check if we have no tickets left
            * number from Available-Tickets header is a string and must be tested as such
@@ -684,9 +688,9 @@ function render_place2book_ticketsinfo($node) {
            */
           if ($p2b_result->headers['Available-Tickets'] == "0" || (int)$p2b_result->headers['Available-Tickets'] < 0) {
             $type = 'no-tickets-left';
-          } 
+          }
           else {
-            
+
             /*
              * check to see if we should present an link for ordering a ticket
              * number from Available-Tickets header is a string and must be typecast as integer
@@ -695,13 +699,13 @@ function render_place2book_ticketsinfo($node) {
             if ($p2b_result->headers['Sales-Status'] == 'open' && ((int)$p2b_result->headers['Available-Tickets'] > 0 || strpos($p2b_result->headers['Available-Tickets'], 'antal') > 0)) {
               $type = 'order-link';
               $url = $p2b_result->headers['Location'];
-            } 
+            }
           }
         }
       }
     }
   }
-  
+
   return theme('place2book_ticketsinfo', $place2book_id, $url, $type);
 }
 
@@ -710,13 +714,16 @@ function render_place2book_ticketsinfo($node) {
  */
 function theme_place2book_ticketsinfo($place2book_id, $url, $type) {
   $output = '';
-  
+
   switch ($type) {
     case 'event-over':
       $output = '<div class="place2book info">' . t('The event has already taken place') . '</div>';
       break;
     case 'closed-admission':
       $output = '<div class="place2book info">' . t('The event is closed for admission') . '</div>';
+      break;
+    case 'sale-not-started':
+      $output = '<div class="place2book info">' . t('Ticket sale has not yet started for this event') . '</div>';
       break;
     case 'no-tickets-left':
       $output = '<div class="place2book info">' . t('There are no available tickets for this event') . '</div>';
@@ -728,7 +735,7 @@ function theme_place2book_ticketsinfo($place2book_id, $url, $type) {
       $output = '';
       break;
   }
-  
+
   return $output;
 }
 
