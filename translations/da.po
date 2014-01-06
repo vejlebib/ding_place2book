@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2014-01-03 22:14+0100\n"
-"PO-Revision-Date: 2014-01-03 22:14+0100\n"
+"POT-Creation-Date: 2014-01-06 09:50+0100\n"
+"PO-Revision-Date: 2014-01-06 09:50+0100\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Danish <EMAIL@ADDRESS>\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr "Place2Book ID"
 msgid "An ID-reference to the corresponding event on the ticket booking service Place2Book"
 msgstr "Det tilsvarende ID på billetbestillingstjenesten Place2book"
 
-#: ding_place2book.module:236 includes/ding_place2book.admin.inc:118
+#: ding_place2book.module:236 includes/ding_place2book.admin.inc:122
 msgid "Kultunaut export"
 msgstr "Kultunaut eksport"
 
@@ -84,7 +84,7 @@ msgstr "Kultunaut eksport"
 msgid "If checked, Place2book will forward this ding-event to Kultunaut."
 msgstr "Hvis sat, vil Place2book videresende dette ding-event til Kultunaut."
 
-#: ding_place2book.module:243 includes/ding_place2book.admin.inc:119
+#: ding_place2book.module:243 includes/ding_place2book.admin.inc:123
 msgid "Passive event"
 msgstr ""
 
@@ -227,36 +227,40 @@ msgstr "Integration til billetbestillingstjenesten Place2book"
 msgid "Ding!"
 msgstr "Ding!"
 
-#: includes/ding_place2book.admin.inc:24
+#: includes/ding_place2book.admin.inc:22
+msgid "<div class=\"form-item\"><p>5 texts exist for displaying ticket information:</p><ul><li>\"The event has already taken place\"</li><li>\"The event is closed for admission\"</li><li>\"Ticket sale has not yet started for this event\"</li><li>\"Sold out\"</li><li>\"Book a ticket\"</li></ul><br/><p>These can all be translated to local needs - just paste the exact texts into the search box at <a href=\"/admin/build/translate/search\">/admin/build/translate/search</a>.</p></div>"
+msgstr ""
+
+#: includes/ding_place2book.admin.inc:28
 msgid "Place2Book service"
 msgstr ""
 
-#: includes/ding_place2book.admin.inc:31
+#: includes/ding_place2book.admin.inc:35
 msgid "Place2Book service URL"
 msgstr "Place2Book service URL"
 
-#: includes/ding_place2book.admin.inc:33
+#: includes/ding_place2book.admin.inc:37
 msgid "Enter a valid Place2book service endpoint, such as https://www.place2book.com/da/event_api"
 msgstr ""
 "Indsæt et gyldigt Place2book service endpoint, såsom "
 "https://www.place2book.com/da/event_api"
 
-#: includes/ding_place2book.admin.inc:40
+#: includes/ding_place2book.admin.inc:44
 msgid "Place2Book events URL"
 msgstr "Place2Book arrangements URL"
 
-#: includes/ding_place2book.admin.inc:42
+#: includes/ding_place2book.admin.inc:46
 msgid "Link to events on Place2Book, such as https://www.place2book.com/da/events. It will be used to generate links to the event at Place2Book"
 msgstr ""
 "Link til arrangementer på Place2book, såsom "
 "https://www.place2book.com/da/events. Den vil blive brugt ved "
 "generering af links til arrangementet på Place2book"
 
-#: includes/ding_place2book.admin.inc:49
+#: includes/ding_place2book.admin.inc:53
 msgid "Place2Book default API key"
 msgstr "Place2Book standard API nøgle"
 
-#: includes/ding_place2book.admin.inc:52
+#: includes/ding_place2book.admin.inc:56
 msgid "This is the default API key used when connecting to Place2book. If you provide API key for a specific library (below), events related to that library will use that key instead of the default key."
 msgstr ""
 "Dette er standard API nøglen brugt når der forbindes til Place2book. "
@@ -264,27 +268,27 @@ msgstr ""
 "arrangementer relateret til dette bibliotek bruge denne nøgle istedet "
 "for standard nøglen"
 
-#: includes/ding_place2book.admin.inc:57
+#: includes/ding_place2book.admin.inc:61
 msgid "Place2Book provider name"
 msgstr "Place2Book provider navn"
 
-#: includes/ding_place2book.admin.inc:60
+#: includes/ding_place2book.admin.inc:64
 msgid "Name sent to Place2Book as the provider"
 msgstr "Navn sendt til Place2Book som provider"
 
-#: includes/ding_place2book.admin.inc:65
+#: includes/ding_place2book.admin.inc:69
 msgid "Place2Book provider e-mail"
 msgstr ""
 
-#: includes/ding_place2book.admin.inc:68
+#: includes/ding_place2book.admin.inc:72
 msgid "E-mail sent to Place2Book as the provider"
 msgstr "E-mail sendt til Place2Book som provider"
 
-#: includes/ding_place2book.admin.inc:73
+#: includes/ding_place2book.admin.inc:77
 msgid "Library API keys"
 msgstr "Biblioteks API nøgler"
 
-#: includes/ding_place2book.admin.inc:91
+#: includes/ding_place2book.admin.inc:95
 msgid "Optional. If you have several accounts at Place2book, each library can have their own API key. In that case, the base API key will be overridden by the provided key when sending data on events related to this library."
 msgstr ""
 "Valgfrit. Hvis der er oprettet flere konti hos Place2book, kan hvert "
@@ -292,21 +296,21 @@ msgstr ""
 "den generelle API nøgle til fordel for den angive nøgle når der "
 "sendes data på events relateret til dét bibliotek."
 
-#: includes/ding_place2book.admin.inc:97
+#: includes/ding_place2book.admin.inc:101
 msgid "Place2Book event node defaults"
 msgstr "Place2book-standardværdier for event typen"
 
-#: includes/ding_place2book.admin.inc:107
+#: includes/ding_place2book.admin.inc:111
 msgid "Capacity"
 msgstr "Kapacitet"
 
-#: includes/ding_place2book.admin.inc:111
+#: includes/ding_place2book.admin.inc:115
 msgid "The default capacity for new events. Set to 0 for unlimited capacity."
 msgstr ""
 "Standard kapacitet på nye events. Sæt til 0 for ubegrænset "
 "kapacitet."
 
-#: includes/ding_place2book.admin.inc:117
+#: includes/ding_place2book.admin.inc:121
 msgid "Maintain copy"
 msgstr "Vedligehold kopi"
 

@@ -18,6 +18,10 @@ function ding_place2book_admin_settings_form(&$form_state) {
   // Load default settings
   $defaults = variable_get('ding_place2book', array());
 
+  $form['ding_place2book_ticketinfo_labels'] = array(
+    '#value' => t('<div class="form-item"><p>5 texts exist for displaying ticket information:</p><ul><li>"The event has already taken place"</li><li>"The event is closed for admission"</li><li>"Ticket sale has not yet started for this event"</li><li>"Sold out"</li><li>"Book a ticket"</li></ul><br/><p>These can all be translated to local needs - just paste the exact texts into the search box at <a href="/admin/build/translate/search">/admin/build/translate/search</a>.</p></div>'),
+  );
+
   // Default settings
   $form['ding_place2book'] = array(
     '#type' => 'fieldset',
