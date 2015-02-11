@@ -411,9 +411,10 @@ function ding_place2book_event_op($op, $node, $place2book_id = NULL) {
     return;
   }
 
-  //get the library id for the event
-  $og_group_ref = field_get_items('node', $node, 'og_group_ref');
-  $library_id = $og_group_ref[0]['target_id'];
+  // Get the library id for the event using entity metadata wrappers
+  $node_wrapper = entity_metadata_wrapper('node', $node);
+  // This will work even if no library is selected (og wrapper returns FALSE).
+  $library_id = $node_wrapper->og_group_ref[0]->getIdentifier();
 
   // Build XML headers.
   $api_key = place2book_get_api_key($library_id);
