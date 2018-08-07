@@ -1,3 +1,6 @@
+This module is now part of core ding2 code and is not maintained here anymore: https://github.com/ding2/ding2/tree/master/modules/ding_place2book
+-----------
+
 Description
 -----------
 The module provides D!ng-integration of the ticket booking service Place2Book.
